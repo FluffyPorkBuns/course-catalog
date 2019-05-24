@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Course Catalog</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="term_button_text">Terms</string>
+    <string name="course_button_text">Courses</string>
+    <string name="mentor_button_text">Mentors</string>
+    <string name="assessment_button_text">Assessments</string>
+</resources>
