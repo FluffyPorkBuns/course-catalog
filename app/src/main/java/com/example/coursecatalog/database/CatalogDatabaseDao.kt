@@ -32,4 +32,8 @@ interface CatalogDatabaseDao {
     // retrieves term livedata from the database based on id
     @Query("SELECT * FROM term_table WHERE termId = :key")
     fun getTermWithId(key: Long): LiveData<TermEntity>
+
+    // deletes all terms from the database
+    @Query("DELETE FROM term_table")
+    fun clearTerms()
 }

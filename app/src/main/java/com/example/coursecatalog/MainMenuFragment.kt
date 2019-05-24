@@ -1,22 +1,16 @@
 package com.example.coursecatalog
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.coursecatalog.database.CatalogDatabase
-import com.example.coursecatalog.database.getViewModel
+import com.example.coursecatalog.util.getViewModel
 import com.example.coursecatalog.databinding.FragmentMainMenuBinding
-import kotlinx.android.synthetic.main.fragment_main_menu.*
-import javax.security.auth.login.LoginException
 
 
 class MainMenuFragment : Fragment() {

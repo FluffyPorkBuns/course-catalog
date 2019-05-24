@@ -9,12 +9,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.example.coursecatalog.R
 import com.example.coursecatalog.database.CatalogDatabase
-import com.example.coursecatalog.database.CatalogDatabaseDao
-import com.example.coursecatalog.database.TermEntity
-import com.example.coursecatalog.database.getViewModel
+import com.example.coursecatalog.util.getViewModel
 import com.example.coursecatalog.databinding.FragmentTermListBinding
-import kotlinx.android.synthetic.main.fragment_term_list.*
-import java.util.*
 
 
 class TermListFragment : Fragment() {

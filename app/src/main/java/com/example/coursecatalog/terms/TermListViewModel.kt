@@ -40,8 +40,13 @@ class TermListViewModel (
     private suspend fun insert(term: TermEntity) {
         withContext(Dispatchers.IO) {
             database.insert(term)
-            val addedID = database.getNewestTerm()?.termId
-            Log.d("dbtest","Inserted ID $addedID")
+        }
+    }
+
+    // clears all terms from the database!
+    private suspend fun clear(term: TermEntity) {
+        withContext(Dispatchers.IO) {
+            database.clearTerms()
         }
     }
 

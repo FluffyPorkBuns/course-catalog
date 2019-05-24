@@ -1,4 +1,4 @@
-package com.example.coursecatalog.database
+package com.example.coursecatalog.util
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.coursecatalog.BaseViewModelFactory
 
 /**
- * helper functions to retrieve ViewModels
+ * helper functions to inflate ViewModels
+ * this eliminates the need to have a ViewModelFactory for each ViewModel
+ * it also ensures that each ViewModel is only instantiated once
  */
 
 inline fun <reified T : ViewModel> Fragment.getViewModel(noinline creator:
