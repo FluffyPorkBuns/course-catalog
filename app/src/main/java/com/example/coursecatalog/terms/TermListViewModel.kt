@@ -23,6 +23,7 @@ class TermListViewModel (
     application: Application
 ) : AndroidViewModel(application) {
 
+    // get context
     val context = application
 
     // keeps all coroutines under one job

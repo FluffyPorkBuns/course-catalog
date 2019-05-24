@@ -1,14 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".terms.TermDetailFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+        <!--bind data to view model-->
+        <variable name="termDetailViewModel"
+                  type="com.example.coursecatalog.terms.TermDetailViewModel"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
-
-</FrameLayout>
+            tools:context=".terms.TermDetailFragment"
+    >
+        <TextView
+                android:text="Term Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/term_title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:termTitleFormatted="@{termDetailViewModel.term}"
+                android:layout_marginStart="@dimen/small_margin" android:textStyle="bold"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+        <TextView
+                android:text="Start Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/start_date_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/term_title"
+                app:startDateFormatted="@{termDetailViewModel.term}"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/medium_margin"/>
+        <TextView
+                android:text="to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/of_text"
+                app:layout_constraintTop_toTopOf="@id/start_date_text"
+                app:layout_constraintStart_toEndOf="@+id/start_date_text"
+                android:layout_marginStart="@dimen/small_margin"/>
+        <TextView
+                android:text="End Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/end_date_text"
+                app:endDateFormatted="@{termDetailViewModel.term}"
+                app:layout_constraintLeft_toRightOf="@id/of_text"
+                app:layout_constraintTop_toTopOf="@id/of_text"
+                app:layout_constraintStart_toEndOf="@id/of_text"
+                android:layout_marginStart="@dimen/small_margin"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

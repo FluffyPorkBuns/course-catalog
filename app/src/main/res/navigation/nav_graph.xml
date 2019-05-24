@@ -16,8 +16,14 @@
         <action android:id="@+id/action_termListFragment_to_termDetailFragment"
                 app:destination="@id/termDetailFragment"
                 app:enterAnim="@anim/nav_default_enter_anim"
-                app:popEnterAnim="@anim/nav_default_pop_enter_anim"/>
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim" app:exitAnim="@anim/nav_default_exit_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment android:id="@+id/termDetailFragment" android:name="com.example.coursecatalog.terms.TermDetailFragment"
-              android:label="fragment_term_detail" tools:layout="@layout/fragment_term_detail"/>
+              android:label="fragment_term_detail" tools:layout="@layout/fragment_term_detail">
+        <argument android:name="termKey" app:argType="long"/>
+        <action android:id="@+id/action_termDetailFragment_to_termListFragment" app:destination="@id/termListFragment"
+                app:enterAnim="@anim/nav_default_enter_anim" app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim" app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
 </navigation>
