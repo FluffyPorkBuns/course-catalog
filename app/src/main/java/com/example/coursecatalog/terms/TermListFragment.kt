@@ -6,7 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.library.baseAdapters.BR.term
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.coursecatalog.R
 import com.example.coursecatalog.database.CatalogDatabase
 import com.example.coursecatalog.util.getViewModel
@@ -24,7 +28,6 @@ class TermListFragment : Fragment() {
 
         val dataSource = CatalogDatabase.getInstance(application).catalogDatabaseDao
 
-        val adapter = TermAdapter()
 
         val binding: FragmentTermListBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_term_list, container, false)
@@ -32,6 +35,10 @@ class TermListFragment : Fragment() {
         val termListViewModel by lazy {
             getViewModel { TermListViewModel(dataSource, application)}
         }
+
+        val adapter = TermAdapter(TermAdapter.TermListener { termId ->
+            termListViewModel.onTermClicked(termId)
+        })
 
         binding.termListViewModel = termListViewModel
 
@@ -41,7 +48,16 @@ class TermListFragment : Fragment() {
 
         termListViewModel.terms.observe(viewLifecycleOwner, androidx.lifecycle.Observer{
             it?.let{
-                adapter.data = it
+                adapter.submitList(it)
+            }
+        })
+
+        termListViewModel.navigateToTermDetail.observe(viewLifecycleOwner, Observer{
+            it?.let {
+                this.findNavController().navigate(
+                    // TODO: pass termid to next fragment
+                    TermListFragmentDirections.actionTermListFragmentToTermDetailFragment())
+                termListViewModel.onTermNavigated()
             }
         })
 

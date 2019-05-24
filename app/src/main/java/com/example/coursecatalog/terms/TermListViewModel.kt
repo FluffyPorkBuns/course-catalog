@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.coursecatalog.database.CatalogDatabaseDao
@@ -59,6 +60,23 @@ class TermListViewModel (
             insert(testTerm)
 
         }
+    }
+
+    /**
+     * live data lets app observe and see when a request to navigate
+     * to the next fragment
+      */
+
+    private val _navigateToTermDetail = MutableLiveData<Long>()
+    val navigateToTermDetail
+        get() = _navigateToTermDetail
+
+    fun onTermClicked(termId: Long) {
+        _navigateToTermDetail.value = termId
+    }
+
+    fun onTermNavigated() {
+        _navigateToTermDetail.value = null
     }
 
 }

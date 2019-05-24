@@ -6,8 +6,18 @@
 
     <fragment android:id="@+id/mainMenuFragment" android:name="com.example.coursecatalog.MainMenuFragment"
               android:label="fragment_main_menu" tools:layout="@layout/fragment_main_menu">
-        <action android:id="@+id/action_mainMenuFragment_to_termListFragment" app:destination="@id/termListFragment"/>
+        <action android:id="@+id/action_mainMenuFragment_to_termListFragment"
+                app:destination="@id/termListFragment"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"/>
     </fragment>
     <fragment android:id="@+id/termListFragment" android:name="com.example.coursecatalog.terms.TermListFragment"
-              android:label="fragment_term_list" tools:layout="@layout/fragment_term_list"/>
+              android:label="fragment_term_list" tools:layout="@layout/fragment_term_list">
+        <action android:id="@+id/action_termListFragment_to_termDetailFragment"
+                app:destination="@id/termDetailFragment"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"/>
+    </fragment>
+    <fragment android:id="@+id/termDetailFragment" android:name="com.example.coursecatalog.terms.TermDetailFragment"
+              android:label="fragment_term_detail" tools:layout="@layout/fragment_term_detail"/>
 </navigation>
