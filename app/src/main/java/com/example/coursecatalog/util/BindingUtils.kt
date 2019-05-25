@@ -1,5 +1,6 @@
 package com.example.coursecatalog.util
 
+import android.widget.EditText
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.coursecatalog.database.TermEntity

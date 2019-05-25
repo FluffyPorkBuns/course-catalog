@@ -11,6 +11,7 @@ import com.example.coursecatalog.R
 import com.example.coursecatalog.database.CatalogDatabase
 import com.example.coursecatalog.databinding.FragmentTermDetailBinding
 import com.example.coursecatalog.util.getViewModel
+import kotlinx.android.synthetic.main.fragment_term_detail.*
 
 
 class TermDetailFragment : Fragment() {
@@ -36,6 +37,11 @@ class TermDetailFragment : Fragment() {
         // gets the viewmodel object for this fragment and pass termkey and datasource
         val termDetailViewModel by lazy {
             getViewModel { TermDetailViewModel(arguments.termKey, dataSource)}
+        }
+
+        // handle user clicking the save button
+        binding.termSaveButton.setOnClickListener{
+            termDetailViewModel.onSaveTerm(term_title.text.toString())
         }
 
         // bind viewmodel to fragment

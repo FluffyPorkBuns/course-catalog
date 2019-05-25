@@ -7,4 +7,6 @@
     <string name="course_button_text">Courses</string>
     <string name="mentor_button_text">Mentors</string>
     <string name="assessment_button_text">Assessments</string>
+    <string name="term_title_hint">Term Title</string>
+    <string name="save_term_button_text">Save Term</string>
 </resources>

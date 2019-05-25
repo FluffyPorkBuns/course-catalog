@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.coursecatalog.database.CatalogDatabaseDao
 import com.example.coursecatalog.database.TermEntity
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 
 class TermDetailViewModel(
     private val termKey: Long = 0L,
@@ -17,6 +17,9 @@ class TermDetailViewModel(
 
     // reference allows access to close coroutines
     private val viewModelJob = Job()
+
+    // run coroutines on ui scope
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     // live data representing term object we're looking at
     private val term = MediatorLiveData<TermEntity>()
@@ -48,6 +51,20 @@ class TermDetailViewModel(
     // resets back to null so observer knows not to navigate anymore
     fun onTermListNavigated() {
         _navigateToTermList.value = null
+    }
+
+    fun saveTitle(newTitle: String) {
+
+    }
+
+    fun onSaveTerm(title: String) {
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                val updatedTerm = database.get(termKey) ?: return@withContext
+                updatedTerm.termTitle = title
+                database.update(updatedTerm)
+            }
+        }
     }
 
 }
