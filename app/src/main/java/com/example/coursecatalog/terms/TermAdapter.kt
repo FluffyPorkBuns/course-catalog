@@ -9,7 +9,7 @@ import com.example.coursecatalog.databinding.ListItemTermBinding
 
 class TermAdapter(val clickListener: TermListener): androidx.recyclerview.widget.ListAdapter<TermEntity, TermAdapter.TermViewHolder>(TermDiffCallback()) {
 
-    // tells recyclerview how to get the viewholder for the term list item
+    // tells recyclerview how to getTerm the viewholder for the term list item
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TermViewHolder {
         return TermViewHolder.from(parent)
     }

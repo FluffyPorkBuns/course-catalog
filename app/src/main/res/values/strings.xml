@@ -9,4 +9,8 @@
     <string name="assessment_button_text">Assessments</string>
     <string name="term_title_hint">Term Title</string>
     <string name="save_term_button_text">Save Term</string>
+    <string name="enter_start_date_hint">Enter Start Date</string>
+    <string name="enter_end_date_hint">Enter End Date</string>
+    <string name="add_course_to_term_text">Add Course to Term</string>
+    <string name="choose_course_instructions_text">Choose from existing courses or add a new course.</string>
 </resources>

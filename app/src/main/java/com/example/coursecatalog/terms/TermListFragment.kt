@@ -24,10 +24,10 @@ class TermListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        // get a reference to the application
+        // getTerm a reference to the application
         val application = requireNotNull(this.activity).application
 
-        // get the catalog database DAO to access the database
+        // getTerm the catalog database DAO to access the database
         val dataSource = CatalogDatabase.getInstance(application).catalogDatabaseDao
 
         // inflates the binding for the fragment

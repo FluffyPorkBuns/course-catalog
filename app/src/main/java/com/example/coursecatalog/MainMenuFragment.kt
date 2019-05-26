@@ -20,17 +20,17 @@ class MainMenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        // get binding for layout
+        // getTerm binding for layout
         val binding: FragmentMainMenuBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_main_menu, container, false)
 
-        // get application context
+        // getTerm application context
         val application = requireNotNull(this.activity).application
 
-        // get instance of DAO for database
+        // getTerm instance of DAO for database
         val dataSource = CatalogDatabase.getInstance(application).catalogDatabaseDao
 
-        // get the view model for this fragment
+        // getTerm the view model for this fragment
         val vm by lazy {
             getViewModel<MainMenuViewModel>()
         }

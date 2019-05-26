@@ -1,17 +1,11 @@
 package com.example.coursecatalog.terms
 
 import android.app.Application
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.coursecatalog.database.CatalogDatabaseDao
 import com.example.coursecatalog.database.TermEntity
 import kotlinx.coroutines.*
-import java.util.*
-import java.util.logging.Logger
 
 /**
  * AndroidViewModel is identical to ViewModel but it's application aware
@@ -23,26 +17,28 @@ class TermListViewModel (
     application: Application
 ) : AndroidViewModel(application) {
 
-    // get context
+    // getTerm context
     val context = application
 
     // keeps all coroutines under one job
     private var viewModelJob = Job()
 
-    // get ui scope so we can run coroutines on the main thread and have the ui update
+    // getTerm ui scope so we can run coroutines on the main thread and have the ui update
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     // make local reference to the database dao
     val database = dataSource
 
-    // get list of all terms in database
+    // getTerm list of all terms in database
     val terms = database.getAllTerms()
 
     // inserts a term object into the database
-    private suspend fun insert(term: TermEntity) {
+    private suspend fun insert(term: TermEntity): Long {
+        var newId = 0L
         withContext(Dispatchers.IO) {
-            database.insert(term)
+            newId = database.insert(term)
         }
+        return newId
     }
 
     // clears all terms from the database!
@@ -52,14 +48,19 @@ class TermListViewModel (
         }
     }
 
-    // click handler for add term button
+    /**
+     * click handler for add term button
+     * inserts new term into the database with a placeholder title and dates
+     * navigates to term detail screen for user to edit
+      */
+
     fun onAddTerm() {
         uiScope.launch {
-            val testTerm = TermEntity()
-            testTerm.termTitle = "test term"
-
-            insert(testTerm)
-
+            val newTerm = TermEntity()
+            newTerm.termTitle = "New Term"
+            val newId = insert(newTerm)
+            onTermClicked(newId)
+            onTermNavigated()
         }
     }
 
