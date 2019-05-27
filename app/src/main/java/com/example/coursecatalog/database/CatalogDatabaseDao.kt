@@ -47,6 +47,18 @@ interface CatalogDatabaseDao {
     """)
     fun getCoursesForTerm(termId: Long): LiveData<List<CourseEntity>>
 
+    // get a list of courses not already added to this term
+    @Query("""
+                SELECT * FROM course_table
+                WHERE course_table.courseId NOT IN (
+                    SELECT course_table.courseId
+                    FROM course_table
+                    INNER JOIN term_course_join
+                    ON course_table.courseId = term_course_join.courseId
+                    WHERE term_course_join.termId = :termId)
+    """)
+    fun getCoursesNotInTerm(termId: Long): LiveData<List<CourseEntity>>
+
     // retrieves a term from the database based on the id provided
     @Query("SELECT * FROM term_table WHERE termId = :key")
     fun getTerm(key: Long): TermEntity?

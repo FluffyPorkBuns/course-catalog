@@ -28,8 +28,8 @@ class CoursePickerViewModel(
     // live data representing term object we're looking at
     private val term = MediatorLiveData<TermEntity>()
 
-    // get all courses
-    val courses = database.getAllCourses()
+    // get all courses that have not already been added to this term
+    val courses = database.getCoursesNotInTerm(termKey)
 
     // getter for term object we're looking at
     fun getTerm() = term
@@ -65,18 +65,6 @@ class CoursePickerViewModel(
         _navigateToTermDetail.value = null
     }
 
-    fun onAddCourseToTerm(title: String, startDate: String, endDate: String) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                val updatedTerm = database.getTerm(termKey) ?: return@withContext
-                updatedTerm.termTitle = title
-                updatedTerm.startDate = formatStringAsDate(startDate)
-                updatedTerm.endDate = formatStringAsDate(endDate)
-                database.update(updatedTerm)
-            }
-        }
-    }
-
     // click handler for add term button
     fun onAddNewCourse() {
         uiScope.launch {
@@ -86,6 +74,14 @@ class CoursePickerViewModel(
 
             insert(testCourse)
 
+        }
+    }
+
+    // inserts a course object into the database
+    private suspend fun addCourseToTerm(courseId: Long) {
+        withContext(Dispatchers.IO) {
+            val termCourseJoin = TermCourseJoin(termKey, courseId, "plan to take", "")
+            database.insert(termCourseJoin)
         }
     }
 
@@ -100,7 +96,10 @@ class CoursePickerViewModel(
     }
 
     fun onCourseClicked(courseId: Long) {
-        _navigateToCourseDetail.value = courseId
+        uiScope.launch{
+            addCourseToTerm(courseId)
+        }
+        onNavigateToTermDetail()
     }
 
 

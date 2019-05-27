@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.coursecatalog.database.CourseEntity
 import com.example.coursecatalog.databinding.ListItemCourseBinding
 
-class CourseAdapter(val clickListener: CourseListener, val isPicker: Boolean = false): androidx.recyclerview.widget.ListAdapter<CourseEntity, CourseAdapter.CourseViewHolder>(CourseDiffCallback()) {
+class CourseAdapter(val clickListener: CourseListener): androidx.recyclerview.widget.ListAdapter<CourseEntity, CourseAdapter.CourseViewHolder>(CourseDiffCallback()) {
 
     // tells recyclerview how to getCourse the viewholder for the course list item
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
@@ -17,7 +17,7 @@ class CourseAdapter(val clickListener: CourseListener, val isPicker: Boolean = f
     // bind ClickListener to itemlist
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(clickListener,item!!, isPicker)
+        holder.bind(clickListener,item!!)
     }
 
     /**
@@ -27,10 +27,9 @@ class CourseAdapter(val clickListener: CourseListener, val isPicker: Boolean = f
     class CourseViewHolder private constructor(val binding: ListItemCourseBinding) : RecyclerView.ViewHolder(binding.root) {
 
         // bind views in list item fragment
-        fun bind(clickListener: CourseListener, item: CourseEntity, isPicker: Boolean) {
+        fun bind(clickListener: CourseListener, item: CourseEntity) {
             binding.course = item
             binding.clickListener = clickListener
-            binding.isPicker = isPicker
             binding.executePendingBindings()
         }
 

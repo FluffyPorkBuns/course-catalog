@@ -5,7 +5,6 @@
                   type="com.example.coursecatalog.database.CourseEntity"/>
         <variable name="clickListener"
                   type="com.example.coursecatalog.courses.CourseAdapter.CourseListener"/>
-        <variable name="isPicker" type="Boolean"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
