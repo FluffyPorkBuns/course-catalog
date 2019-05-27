@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -48,6 +50,17 @@ class MainMenuFragment : Fragment() {
             }
 
         })
+
+        /**
+         * makes sure that when the user hits the back button
+         * it navigates them out of the app
+         */
+        super.onCreate(savedInstanceState)
+        // This callback will only be called when MyFragment is at least Started.
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressed = {
+            requireActivity().finishAffinity()
+        })
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
 
         return binding.root

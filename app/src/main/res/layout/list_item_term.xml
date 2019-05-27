@@ -47,7 +47,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="@dimen/small_margin"
-                app:startDateFormatted="@{term}"/>
+                app:endDateFormatted="@{term}"/>
         <TextView
                 android:text="Start Date"
                 android:id="@+id/start_text"
@@ -59,6 +59,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginBottom="@dimen/small_margin"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:endDateFormatted="@{term}"/>
+                app:startDateFormatted="@{term}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

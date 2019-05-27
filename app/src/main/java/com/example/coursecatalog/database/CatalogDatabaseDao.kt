@@ -29,14 +29,14 @@ interface CatalogDatabaseDao {
     @Update
     fun update(course: CourseEntity)
 
-    // get list of terms associated with a course
+    // get term associated with a course
     @Query("""
                 SELECT * FROM term_table
                 INNER JOIN term_course_join
                 ON term_table.termId = term_course_join.termId
-                WHERE term_course_join.courseId=:courseId
+                WHERE term_course_join.courseId=:courseId LIMIT 1
     """)
-    fun getTermsForCourse(courseId: Long): LiveData<List<TermEntity>>
+    fun getTermIdForCourse(courseId: Long): Long
 
     // get list of courses associated with a term
     @Query("""

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR.term
 import androidx.lifecycle.Observer
@@ -71,6 +72,27 @@ class TermListFragment : Fragment() {
                 termListViewModel.onTermNavigated()
             }
         })
+
+        // observe for user backing out to main menu
+        termListViewModel.navigateToMainMenu.observe(viewLifecycleOwner, Observer{
+            it?.let {
+                this.findNavController().navigate(
+                    TermListFragmentDirections.actionTermListFragmentToMainMenuFragment())
+                termListViewModel.onTermNavigated()
+            }
+        })
+
+        /**
+         * makes sure that when the user hits the back button
+         * it navigates them back to the term list
+         */
+        super.onCreate(savedInstanceState)
+        // This callback will only be called when MyFragment is at least Started.
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            termListViewModel.onNavigateToMainMenu()
+            termListViewModel.onMainMenuNavigated()
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
 
         // Inflate the layout for this fragment

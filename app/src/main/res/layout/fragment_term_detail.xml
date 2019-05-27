@@ -14,7 +14,7 @@
             tools:context=".terms.TermDetailFragment"
     >
         <EditText
-                android:text="Term Title"
+                tools:text="Term Title"
                 android:maxLines="1"
                 android:lines="1"
                 android:maxLength="20"
@@ -30,7 +30,7 @@
                 android:inputType="textShortMessage"
                 android:hint="@string/term_title_hint"/>
         <EditText
-                android:text="Start Date"
+                tools:text="Start Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/start_date_text"
@@ -42,10 +42,10 @@
                 android:hint="@string/enter_start_date_hint"
                 android:inputType="date"/>
         <EditText
-                android:text="End Date"
+                tools:text="End Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/end_date_text"
+                android:id="@+id/start_date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:endDateFormatted="@{termDetailViewModel.term}"
                 android:layout_marginStart="@dimen/small_margin"
@@ -61,7 +61,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="@dimen/small_margin"
                 android:layout_marginTop="@dimen/medium_margin"
-                app:layout_constraintTop_toBottomOf="@+id/end_date_text"/>
+                app:layout_constraintTop_toBottomOf="@+id/start_date" android:visibility="gone"/>
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -81,7 +81,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/term_course_list"
-                android:onClick="@{() -> termDetailViewModel.onNavigateToCoursePicker()}"/>
+                android:onClick="@{() -> termDetailViewModel.onAddCourse()}"/>
         <TextView
                 android:text="Courses for This Term"
                 android:layout_width="wrap_content"

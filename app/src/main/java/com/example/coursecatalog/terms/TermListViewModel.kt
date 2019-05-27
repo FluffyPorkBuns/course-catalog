@@ -81,4 +81,16 @@ class TermListViewModel (
         _navigateToTermDetail.value = null
     }
 
+    private val _navigateToMainMenu = MutableLiveData<Boolean>()
+    val navigateToMainMenu
+        get() = _navigateToMainMenu
+
+    fun onNavigateToMainMenu() {
+        _navigateToMainMenu.value = true
+    }
+
+    fun onMainMenuNavigated() {
+        _navigateToMainMenu.value = null
+    }
+
 }

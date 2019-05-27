@@ -80,7 +80,7 @@ class CoursePickerViewModel(
     // inserts a course object into the database
     private suspend fun addCourseToTerm(courseId: Long) {
         withContext(Dispatchers.IO) {
-            val termCourseJoin = TermCourseJoin(termKey, courseId, "plan to take", "")
+            val termCourseJoin = TermCourseJoin(termKey, courseId)
             database.insert(termCourseJoin)
         }
     }
@@ -89,8 +89,7 @@ class CoursePickerViewModel(
     private suspend fun insert(course: CourseEntity) {
         withContext(Dispatchers.IO) {
             val courseId = database.insert(course)
-            val termCourseEntity = TermCourseJoin(termKey, courseId,
-                "want to take", "sample note")
+            val termCourseEntity = TermCourseJoin(termKey, courseId)
             database.insert(termCourseEntity)
         }
     }

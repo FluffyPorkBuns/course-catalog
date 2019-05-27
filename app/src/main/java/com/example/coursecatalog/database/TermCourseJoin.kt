@@ -15,7 +15,5 @@ import androidx.room.ForeignKey
     ))
 data class TermCourseJoin(
     val termId: Long,
-    val courseId: Long,
-    val courseStatus: String,
-    val courseNote: String
+    val courseId: Long
 )

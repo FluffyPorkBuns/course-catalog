@@ -12,5 +12,15 @@
     <string name="enter_start_date_hint">Enter Start Date</string>
     <string name="enter_end_date_hint">Enter End Date</string>
     <string name="add_course_to_term_text">Add Course to Term</string>
-    <string name="choose_course_instructions_text">Choose from existing courses or add a new course.</string>
+    <string name="choose_course_instructions_text">Choose a course to add to your term</string>
+    <string name="status_label_text">Status:</string>
+    <string name="projected_end_date_text">Projected End Date:</string>
+    <string name="start_date_label_text">Start Date:</string>
+    <!--holds an array of options available for user to choose course status-->
+    <string-array name="course_status_array">
+        <item>plan to take</item>
+        <item>in progress</item>
+        <item>completed</item>
+        <item>dropped</item>
+    </string-array>
 </resources>

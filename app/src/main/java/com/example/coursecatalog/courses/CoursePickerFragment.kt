@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -25,6 +26,8 @@ class CoursePickerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
 
         // getCourse binding to fragment
         val binding: FragmentCoursePickerBinding = DataBindingUtil.inflate(
@@ -64,6 +67,18 @@ class CoursePickerFragment : Fragment() {
                 coursePickerViewModel.onTermDetailNavigated()
             }
         })
+
+        /**
+         * makes sure that when the user hits the back button
+         * it navigates them back to the term detail view
+         */
+        super.onCreate(savedInstanceState)
+        // This callback will only be called when MyFragment is at least Started.
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            coursePickerViewModel.onNavigateToTermDetail()
+            coursePickerViewModel.onTermDetailNavigated()
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         // bind viewmodel to fragment
         binding.coursePickerViewModel = coursePickerViewModel

@@ -3,6 +3,7 @@ package com.example.coursecatalog.util
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.coursecatalog.database.CourseEntity
+import com.example.coursecatalog.database.Mentor
 import com.example.coursecatalog.database.TermEntity
 
 @BindingAdapter("termTitleFormatted")
@@ -27,22 +28,50 @@ fun TextView.setEndDateFormatted(item: TermEntity?) {
 }
 
 @BindingAdapter("courseTitleFormatted")
-fun TextView.setCourseTitleFormatted(item: CourseEntity) {
+fun TextView.setCourseTitleFormatted(item: CourseEntity?) {
     item?.let {
         text = item.courseTitle
     }
 }
 
 @BindingAdapter("courseStartDateFormatted")
-fun TextView.setCourseStartDateFormatted(item: CourseEntity) {
+fun TextView.setCourseStartDateFormatted(item: CourseEntity?) {
     item?.let {
         text = formatDateAsString(item.startDate)
     }
 }
 
 @BindingAdapter("courseEndDateFormatted")
-fun TextView.setCourseEndDateFormatted(item: CourseEntity) {
+fun TextView.setCourseEndDateFormatted(item: CourseEntity?) {
     item?.let {
         text = formatDateAsString(item.endDate)
+    }
+}
+
+@BindingAdapter("mentorName")
+fun TextView.setMentorName(item: Mentor?) {
+    item?.let {
+        text = item.name
+    }
+}
+
+@BindingAdapter("mentorPhone")
+fun TextView.setMentorPhone(item: Mentor?) {
+    item?.let {
+        text = item.phone
+    }
+}
+
+@BindingAdapter("mentorEmail")
+fun TextView.setMentorEmail(item: Mentor?) {
+    item?.let {
+        text = item.email
+    }
+}
+
+@BindingAdapter("courseNotes")
+fun TextView.setNotes(item: CourseEntity?) {
+    item?.let {
+        text = item.notes
     }
 }

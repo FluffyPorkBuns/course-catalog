@@ -1,26 +1,21 @@
 package com.example.coursecatalog.terms
 
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.coursecatalog.R
 import com.example.coursecatalog.courses.CourseAdapter
 import com.example.coursecatalog.database.CatalogDatabase
 import com.example.coursecatalog.databinding.FragmentTermDetailBinding
-import com.example.coursecatalog.dialogs.DatePickerFragment
 import com.example.coursecatalog.util.getViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_term_detail.*
 
 
@@ -63,12 +58,7 @@ class TermDetailFragment : Fragment() {
 
         // handle user clicking the save button
         binding.termSaveButton.setOnClickListener{
-            termDetailViewModel.onSaveTerm(term_title.text.toString(),
-                start_date_text.text.toString(),
-                end_date_text.text.toString())
-            Toast.makeText(context, "Term saved!", Toast.LENGTH_SHORT).show()
-            termDetailViewModel.onNavigateToTermList()
-            termDetailViewModel.onTermListNavigated()
+            saveTerm(termDetailViewModel)
         }
 
         // observe for user clicking on a term to go to the detail view
@@ -80,14 +70,27 @@ class TermDetailFragment : Fragment() {
             }
         })
 
-        // observe for user clicking to add a course to the term and navigate to the course picker fragment
-        termDetailViewModel.navigateToCoursePicker.observe(viewLifecycleOwner, Observer{
+        termDetailViewModel.navigateToCourseDetail.observe(viewLifecycleOwner, Observer{
             it?.let {
                 this.findNavController().navigate(
-                    TermDetailFragmentDirections.actionTermDetailFragmentToCoursePickerFragment(it))
-                termDetailViewModel.onTermListNavigated()
+                    TermDetailFragmentDirections.actionTermDetailFragmentToCourseDetailFragment(it)
+                )
+                termDetailViewModel.onCourseNavigated()
             }
         })
+
+        /**
+         * makes sure that when the user hits the back button
+         * it saves the term and navigates them back to the term list
+         */
+        super.onCreate(savedInstanceState)
+        // This callback will only be called when MyFragment is at least Started.
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            saveTerm(termDetailViewModel)
+            termDetailViewModel.onNavigateToTermList()
+            termDetailViewModel.onTermListNavigated()
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         // bind viewmodel to fragment
         binding.termDetailViewModel = termDetailViewModel
@@ -101,6 +104,17 @@ class TermDetailFragment : Fragment() {
 
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    private fun saveTerm(termDetailViewModel: TermDetailViewModel) {
+        termDetailViewModel.onSaveTerm(
+            term_title.text.toString(),
+            start_date_text.text.toString(),
+            start_date.text.toString()
+        )
+        Toast.makeText(context, "Term saved!", Toast.LENGTH_SHORT).show()
+        termDetailViewModel.onNavigateToTermList()
+        termDetailViewModel.onTermListNavigated()
     }
 
 }

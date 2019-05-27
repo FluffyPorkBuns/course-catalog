@@ -16,8 +16,12 @@
         <action android:id="@+id/action_termListFragment_to_termDetailFragment"
                 app:destination="@id/termDetailFragment"
                 app:enterAnim="@anim/nav_default_enter_anim"
-                app:popEnterAnim="@anim/nav_default_pop_enter_anim" app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
                 app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action android:id="@+id/action_termListFragment_to_mainMenuFragment" app:destination="@id/mainMenuFragment"
+                app:enterAnim="@anim/nav_default_enter_anim" app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim" app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment android:id="@+id/termDetailFragment" android:name="com.example.coursecatalog.terms.TermDetailFragment"
               android:label="fragment_term_detail" tools:layout="@layout/fragment_term_detail">
@@ -29,8 +33,10 @@
                 app:destination="@id/coursePickerFragment" app:enterAnim="@anim/nav_default_enter_anim"
                 app:exitAnim="@anim/nav_default_exit_anim" app:popEnterAnim="@anim/nav_default_pop_enter_anim"
                 app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-        <action android:id="@+id/action_termDetailFragment_to_courseTermDetailFragment"
-                app:destination="@id/courseTermDetailFragment"/>
+        <action android:id="@+id/action_termDetailFragment_to_courseDetailFragment"
+                app:destination="@id/courseDetailFragment" app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim" app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment android:id="@+id/coursePickerFragment" android:name="com.example.coursecatalog.courses.CoursePickerFragment"
               android:label="fragment_course_picker" tools:layout="@layout/fragment_course_picker">
@@ -38,7 +44,13 @@
                 app:destination="@id/termDetailFragment"/>
         <argument android:name="termKey" app:argType="long"/>
     </fragment>
-    <fragment android:id="@+id/courseTermDetailFragment"
-              android:name="com.example.coursecatalog.courses.CourseTermDetailFragment"
-              android:label="fragment_course_term_detail" tools:layout="@layout/fragment_course_term_detail"/>
+    <fragment android:id="@+id/courseDetailFragment"
+              android:name="com.example.coursecatalog.courses.CourseDetailFragment"
+              android:label="fragment_course_term_detail" tools:layout="@layout/fragment_course_detail">
+        <argument android:name="courseKey" app:argType="long"/>
+        <action android:id="@+id/action_courseDetailFragment_to_termDetailFragment"
+                app:destination="@id/termDetailFragment" app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim" app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
 </navigation>

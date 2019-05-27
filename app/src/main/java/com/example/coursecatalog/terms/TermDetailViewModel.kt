@@ -1,6 +1,7 @@
 package com.example.coursecatalog.terms
 
 import android.provider.SyncStateContract.Helpers.insert
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +12,7 @@ import com.example.coursecatalog.database.TermCourseJoin
 import com.example.coursecatalog.database.TermEntity
 import com.example.coursecatalog.util.formatStringAsDate
 import kotlinx.coroutines.*
+import javax.security.auth.login.LoginException
 
 class TermDetailViewModel(
     private val termKey: Long = 0L,
@@ -87,25 +89,16 @@ class TermDetailViewModel(
         }
     }
 
-    // click handler for add term button
-    fun onAddTerm() {
+    // adds new blank course and navigates to course detail
+    fun onAddCourse() {
         uiScope.launch {
-            val testCourse = CourseEntity()
-
-            testCourse.courseTitle = "Test Course"
-
-            insert(testCourse)
-
-        }
-    }
-
-    // inserts a course object into the database
-    private suspend fun insert(course: CourseEntity) {
-        withContext(Dispatchers.IO) {
-            val courseId = database.insert(course)
-            val termCourseEntity = TermCourseJoin(termKey, courseId,
-                "want to take", "sample note")
-            database.insert(termCourseEntity)
+            val newCourse = CourseEntity()
+            val courseId = database.insert(newCourse)
+            Log.i("course add debug", "$courseId")
+            val termCourseJoin = TermCourseJoin(termKey, courseId)
+            database.insert(termCourseJoin)
+            onCourseClicked(courseId)
+            onCourseNavigated()
         }
     }
 
