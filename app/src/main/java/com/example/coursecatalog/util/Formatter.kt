@@ -13,3 +13,21 @@ fun formatDateAsString(date: Date): String {
 fun formatStringAsDate(date: String): Date {
     return SimpleDateFormat("MM/dd/yy").parse(date)
 }
+
+fun getDateBeginningOfDay(date: Date): Date {
+    val calendar = GregorianCalendar()
+    calendar.time = date
+    calendar.set(Calendar.HOUR_OF_DAY, calendar.getMinimum(Calendar.HOUR_OF_DAY))
+    calendar.set(Calendar.MINUTE, calendar.getMinimum(Calendar.MINUTE))
+    calendar.set(Calendar.SECOND, calendar.getMinimum(Calendar.SECOND))
+    calendar.set(Calendar.MILLISECOND, calendar.getMinimum(Calendar.MILLISECOND))
+
+    return calendar.time
+}
+
+fun getYesterday(date: Date): Date {
+    val calendar = GregorianCalendar()
+    calendar.time = date
+    calendar.add(Calendar.HOUR, -24)
+    return calendar.time
+}

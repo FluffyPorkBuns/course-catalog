@@ -2,6 +2,7 @@ package com.example.coursecatalog.util
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.example.coursecatalog.database.Assessment
 import com.example.coursecatalog.database.CourseEntity
 import com.example.coursecatalog.database.Mentor
 import com.example.coursecatalog.database.TermEntity
@@ -71,6 +72,34 @@ fun TextView.setMentorEmail(item: Mentor?) {
 
 @BindingAdapter("courseNotes")
 fun TextView.setNotes(item: CourseEntity?) {
+    item?.let {
+        text = item.notes
+    }
+}
+
+@BindingAdapter("assessmentTitle")
+fun TextView.setAssessmentTitle(item: Assessment?) {
+    item?.let {
+        text = item.title
+    }
+}
+
+@BindingAdapter("assessmentDueDate")
+fun TextView.setAssessmentDueDate(item: Assessment?) {
+    item?.let {
+        text = formatDateAsString(item.dueDate)
+    }
+}
+
+@BindingAdapter("assessmentType")
+fun TextView.setAssessmentType(item: Assessment?) {
+    item?.let {
+        text = item.type
+    }
+}
+
+@BindingAdapter("assessmentNotes")
+fun TextView.setAssessmentNotes(item: Assessment?) {
     item?.let {
         text = item.notes
     }

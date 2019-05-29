@@ -81,7 +81,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/term_course_list"
-                android:onClick="@{() -> termDetailViewModel.onAddCourse()}"/>
+                android:onClick="@{() -> termDetailViewModel.onAddCourse()}" app:backgroundTint="#E91E63"
+                app:fabSize="mini"/>
         <TextView
                 android:text="Courses for This Term"
                 android:layout_width="wrap_content"
@@ -93,5 +94,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
                 android:textStyle="bold" android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true" app:srcCompat="@android:drawable/ic_menu_delete"
+                android:id="@+id/delete_button" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent" app:backgroundTint="#F44336"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

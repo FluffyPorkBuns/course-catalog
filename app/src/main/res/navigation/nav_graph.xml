@@ -29,20 +29,10 @@
         <action android:id="@+id/action_termDetailFragment_to_termListFragment" app:destination="@id/termListFragment"
                 app:enterAnim="@anim/nav_default_enter_anim" app:exitAnim="@anim/nav_default_exit_anim"
                 app:popEnterAnim="@anim/nav_default_pop_enter_anim" app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-        <action android:id="@+id/action_termDetailFragment_to_coursePickerFragment"
-                app:destination="@id/coursePickerFragment" app:enterAnim="@anim/nav_default_enter_anim"
-                app:exitAnim="@anim/nav_default_exit_anim" app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action android:id="@+id/action_termDetailFragment_to_courseDetailFragment"
                 app:destination="@id/courseDetailFragment" app:enterAnim="@anim/nav_default_enter_anim"
                 app:exitAnim="@anim/nav_default_exit_anim" app:popEnterAnim="@anim/nav_default_pop_enter_anim"
                 app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
-    </fragment>
-    <fragment android:id="@+id/coursePickerFragment" android:name="com.example.coursecatalog.courses.CoursePickerFragment"
-              android:label="fragment_course_picker" tools:layout="@layout/fragment_course_picker">
-        <action android:id="@+id/action_coursePickerFragment_to_termDetailFragment"
-                app:destination="@id/termDetailFragment"/>
-        <argument android:name="termKey" app:argType="long"/>
     </fragment>
     <fragment android:id="@+id/courseDetailFragment"
               android:name="com.example.coursecatalog.courses.CourseDetailFragment"
@@ -52,5 +42,14 @@
                 app:destination="@id/termDetailFragment" app:enterAnim="@anim/nav_default_enter_anim"
                 app:exitAnim="@anim/nav_default_exit_anim" app:popEnterAnim="@anim/nav_default_pop_enter_anim"
                 app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action android:id="@+id/action_courseDetailFragment_to_assessmentDetailFragment"
+                app:destination="@id/assessmentDetailFragment"/>
+    </fragment>
+    <fragment android:id="@+id/assessmentDetailFragment"
+              android:name="com.example.coursecatalog.assessments.AssessmentDetailFragment"
+              android:label="fragment_assessment_detail" tools:layout="@layout/fragment_assessment_detail">
+        <argument android:name="assessmentKey" app:argType="long"/>
+        <action android:id="@+id/action_assessmentDetailFragment_to_courseDetailFragment"
+                app:destination="@id/courseDetailFragment"/>
     </fragment>
 </navigation>

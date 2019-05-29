@@ -1,9 +1,6 @@
 package com.example.coursecatalog.database
 
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.util.*
 
 // mentor object will be nested under CourseEntity
@@ -14,8 +11,21 @@ data class Mentor(
     var email: String = ""
 )
 
-// defines the course entity for the room to use in the database
-@Entity(tableName = "course_table")
+/**
+ * defines the course entity for the room to use in the database
+ * assessments are represented as a 1 to many relationship
+ * using foreign key constraint with RESTRICT so that a term cannot be
+ * deleted without first deleting all the courses
+  */
+
+@Entity(tableName = "course_table",
+    foreignKeys = [ForeignKey(
+        entity = TermEntity::class,
+        parentColumns = arrayOf("termId"),
+        childColumns = arrayOf("termId"),
+        onDelete = ForeignKey.RESTRICT
+    )]
+)
 data class CourseEntity(
     @PrimaryKey(autoGenerate = true)
     var courseId: Long = 0L,
@@ -34,6 +44,9 @@ data class CourseEntity(
 
     @ColumnInfo(name = "notes")
     var notes: String = "",
+
+    @ColumnInfo
+    var termId: Long = 0L,
 
     // mentor object is nested in course and has a 1 to 1 relationship
     @Embedded

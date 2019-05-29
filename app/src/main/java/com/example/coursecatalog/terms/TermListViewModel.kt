@@ -41,12 +41,6 @@ class TermListViewModel (
         return newId
     }
 
-    // clears all terms from the database!
-    private suspend fun clear(term: TermEntity) {
-        withContext(Dispatchers.IO) {
-            database.clearTerms()
-        }
-    }
 
     /**
      * click handler for add term button

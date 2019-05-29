@@ -2,13 +2,14 @@ package com.example.coursecatalog.terms
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.coursecatalog.R
@@ -39,6 +40,13 @@ class TermDetailFragment : Fragment() {
         // getTerm reference to database dao
         val dataSource = CatalogDatabase.getInstance(application).catalogDatabaseDao
 
+        val courses = dataSource.getAllCoursesAsList()
+
+        for(course in courses) {
+            Log.i("databaseissues",course.toString())
+        }
+
+
         // gets the viewmodel object for this fragment and pass termkey and datasource
         val termDetailViewModel by lazy {
             getViewModel { TermDetailViewModel(arguments.termKey, dataSource)}
@@ -61,6 +69,19 @@ class TermDetailFragment : Fragment() {
             saveTerm(termDetailViewModel)
         }
 
+        // handle delete button
+        binding.deleteButton.setOnClickListener{
+            termDetailViewModel.onDelete()
+        }
+
+        // pops up an error message if the user tries to delete a term with courses
+        termDetailViewModel.cannotDelete.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                Toast.makeText(context, "Can't delete term while there are courses added! Delete the courses first.", Toast.LENGTH_LONG).show()
+                termDetailViewModel.onCanDelete()
+            }
+        })
+
         // observe for user clicking on a term to go to the detail view
         termDetailViewModel.navigateToTermList.observe(viewLifecycleOwner, Observer{
             it?.let {
@@ -72,6 +93,7 @@ class TermDetailFragment : Fragment() {
 
         termDetailViewModel.navigateToCourseDetail.observe(viewLifecycleOwner, Observer{
             it?.let {
+
                 this.findNavController().navigate(
                     TermDetailFragmentDirections.actionTermDetailFragmentToCourseDetailFragment(it)
                 )
@@ -87,8 +109,6 @@ class TermDetailFragment : Fragment() {
         // This callback will only be called when MyFragment is at least Started.
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
             saveTerm(termDetailViewModel)
-            termDetailViewModel.onNavigateToTermList()
-            termDetailViewModel.onTermListNavigated()
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
@@ -112,7 +132,7 @@ class TermDetailFragment : Fragment() {
             start_date_text.text.toString(),
             start_date.text.toString()
         )
-        Toast.makeText(context, "Term saved!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "term saved", Toast.LENGTH_SHORT).show()
         termDetailViewModel.onNavigateToTermList()
         termDetailViewModel.onTermListNavigated()
     }

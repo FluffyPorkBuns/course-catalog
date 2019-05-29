@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 // database that stores information for the course catalog app
-@Database(entities = [TermEntity::class, CourseEntity::class, TermCourseJoin::class], version = 10, exportSchema = false)
+@Database(entities = [TermEntity::class, CourseEntity::class, Assessment::class], version = 18, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class CatalogDatabase: RoomDatabase() {
 

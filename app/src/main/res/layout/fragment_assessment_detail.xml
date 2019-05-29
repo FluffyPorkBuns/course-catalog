@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+        <variable name="assessment" type="com.example.coursecatalog.database.Assessment"/>
+        <variable name="assessmentDetailViewModel"
+                  type="com.example.coursecatalog.assessments.AssessmentDetailViewModel"/>
+    </data>
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+                                           android:layout_height="wrap_content"
+                                           app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                           android:isScrollContainer="true"
+                                           android:measureAllChildren="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".assessments.AssessmentDetailFragment"
+                android:id="@+id/frameLayout3">
+            <EditText
+                    app:assessmentTitle="@{assessmentDetailViewModel.assessment}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="Name"
+                    android:ems="10"
+                    android:id="@+id/assessment_title" android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent" android:textStyle="bold"/>
+            <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/assessment_type_spinner"
+                    app:layout_constraintTop_toBottomOf="@+id/assessment_type_label" android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"/>
+            <TextView
+                    android:text="Assessment Type:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/assessment_type_label"
+                    android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/assessment_title"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+            <TextView
+                    android:text="Due Date:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/due_date_label"
+                    app:layout_constraintTop_toBottomOf="@+id/assessment_type_spinner"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp" android:layout_marginTop="16dp"/>
+            <EditText
+                    android:id="@+id/due_date"
+                    app:assessmentDueDate="@{assessmentDetailViewModel.assessment}"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:ems="@integer/small_edit_text_ems"
+                    app:layout_constraintTop_toBottomOf="@+id/due_date_label"
+                    android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"/>
+            <TextView
+                    android:text="Notes:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/notes_label" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp" android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/due_date"/>
+            <EditText
+                    android:id="@+id/notes"
+                    app:assessmentNotes="@{assessmentDetailViewModel.assessment}"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:gravity="start|top"
+                    android:ems="10"
+                    app:layout_constraintTop_toBottomOf="@+id/notes_label" android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toStartOf="parent"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true" app:srcCompat="@android:drawable/ic_menu_delete"
+                    android:id="@+id/delete_button" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent" app:backgroundTint="#F44336" android:tint="#00FFFFFF"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true" app:srcCompat="@android:drawable/ic_lock_idle_alarm"
+                    android:id="@+id/alarm_set_button"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                    app:backgroundTint="#2196F3" android:tint="#00FFFFFF"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

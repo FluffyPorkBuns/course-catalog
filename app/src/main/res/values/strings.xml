@@ -16,11 +16,17 @@
     <string name="status_label_text">Status:</string>
     <string name="projected_end_date_text">Projected End Date:</string>
     <string name="start_date_label_text">Start Date:</string>
+    <string name="due_text">due</string>
     <!--holds an array of options available for user to choose course status-->
     <string-array name="course_status_array">
         <item>plan to take</item>
         <item>in progress</item>
         <item>completed</item>
         <item>dropped</item>
+    </string-array>
+    <!--holds an array of options available for user to choose assessment type-->
+    <string-array name="assessment_type_array">
+        <item>objective</item>
+        <item>performance</item>
     </string-array>
 </resources>

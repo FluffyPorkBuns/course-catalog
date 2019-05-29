@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.coursecatalog.database.CatalogDatabaseDao
 import com.example.coursecatalog.database.CourseEntity
-import com.example.coursecatalog.database.TermCourseJoin
 import com.example.coursecatalog.database.TermEntity
+import com.example.coursecatalog.util.NotificationScheduler
 import com.example.coursecatalog.util.formatStringAsDate
 import kotlinx.coroutines.*
 import javax.security.auth.login.LoginException
@@ -93,18 +93,39 @@ class TermDetailViewModel(
     fun onAddCourse() {
         uiScope.launch {
             val newCourse = CourseEntity()
+            newCourse.termId = termKey
             val courseId = database.insert(newCourse)
-            Log.i("course add debug", "$courseId")
-            val termCourseJoin = TermCourseJoin(termKey, courseId)
-            database.insert(termCourseJoin)
             onCourseClicked(courseId)
             onCourseNavigated()
+        }
+    }
+
+    fun onDelete() {
+        uiScope.launch {
+           if (courses.value.isNullOrEmpty()) {
+               database.deleteTermById(termKey)
+               onNavigateToTermList()
+               onTermListNavigated()
+           } else {
+               onCannotDelete()
+           }
         }
     }
 
     private val _navigateToCourseDetail = MutableLiveData<Long>()
     val navigateToCourseDetail
         get() = _navigateToCourseDetail
+
+    private val _cannotDelete = MutableLiveData<Boolean>()
+    val cannotDelete
+        get() = _cannotDelete
+    fun onCannotDelete() {
+        _cannotDelete.value = true
+    }
+
+    fun onCanDelete() {
+        _cannotDelete.value = null
+    }
 
     fun onCourseClicked(courseId: Long) {
         _navigateToCourseDetail.value = courseId

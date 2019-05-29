@@ -32,5 +32,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:id="@+id/term_list"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <TextView
+                android:text="Terms:"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:id="@+id/textView2" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/term_list"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -20,6 +20,7 @@ class CourseAdapter(val clickListener: CourseListener): androidx.recyclerview.wi
         holder.bind(clickListener,item!!)
     }
 
+
     /**
      * viewholder for course list item
      * recyclerview uses this to refer to the item

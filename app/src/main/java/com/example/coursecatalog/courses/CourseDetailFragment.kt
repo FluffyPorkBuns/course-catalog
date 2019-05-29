@@ -11,14 +11,14 @@ import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.NavGraph
 import androidx.navigation.fragment.findNavController
 import com.example.coursecatalog.R
+import com.example.coursecatalog.assessments.AssessmentAdapter
 import com.example.coursecatalog.database.CatalogDatabase
 import com.example.coursecatalog.databinding.FragmentCourseDetailBinding
+import com.example.coursecatalog.util.NotificationScheduler
 import com.example.coursecatalog.util.getViewModel
 import kotlinx.android.synthetic.main.fragment_course_detail.*
-import kotlinx.android.synthetic.main.list_item_course.*
 
 
 class CourseDetailFragment : Fragment() {
@@ -46,6 +46,11 @@ class CourseDetailFragment : Fragment() {
             getViewModel { CourseDetailViewModel(arguments.courseKey, dataSource) }
         }
 
+        // instantiate adapter for assessment list
+        val adapter = AssessmentAdapter(AssessmentAdapter.AssessmentListener{ assessmentId ->
+            courseDetailViewModel.onAssessmentClicked(assessmentId)
+        })
+
 //        // handle user clicking the save button
 //        binding.courseSaveButton.setOnClickListener{
 //            courseDetailViewModel.onSaveCourse(
@@ -68,20 +73,51 @@ class CourseDetailFragment : Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
+        // observe term table for changes so recyclerview updates
+        courseDetailViewModel.assessments.observe(viewLifecycleOwner, Observer{
+            it?.let{
+                adapter.submitList(it)
+            }
+        })
+
+        binding.addAlarmButton.setOnClickListener{
+            // save alarm for course
+            NotificationScheduler.newCourseNotification(context!!, arguments.courseKey)
+        }
+
         // tell course detail viewmodel to get the termId associated with this course
         courseDetailViewModel.getTermId()
+
+        // click handler for assessment add button
+        binding.addAssessmentButton.setOnClickListener{
+            courseDetailViewModel.onNewAssessment()
+        }
 
         // handle user clicking the save button
         binding.courseSaveButton.setOnClickListener{
             saveCourse(courseDetailViewModel)
         }
 
+        // handler for delete button
+        binding.deleteButton.setOnClickListener{
+            courseDetailViewModel.onDelete()
+        }
+
         // listener that navigates to term detail view when viewmodel requests it
         courseDetailViewModel.navigateToTermDetail.observe(viewLifecycleOwner, Observer{
             it?.let{
-                Log.i("term id bug", "$it")
                 this.findNavController().navigate(
                     CourseDetailFragmentDirections.actionCourseDetailFragmentToTermDetailFragment(it)
+                )
+            }
+        })
+
+        // listener that navigates to assessment detail view when viewmodel requests it
+        courseDetailViewModel.navigateToAssessmentDetail.observe(viewLifecycleOwner, Observer{
+            it?.let{
+
+                this.findNavController().navigate(
+                    CourseDetailFragmentDirections.actionCourseDetailFragmentToAssessmentDetailFragment(it)
                 )
             }
         })
@@ -99,6 +135,9 @@ class CourseDetailFragment : Fragment() {
         // bind viewmodel to fragment
         binding.courseDetailViewModel = courseDetailViewModel
 
+        // bind adapter to assessment recyclerview
+        binding.assessmentList.adapter = adapter
+
         // bind lifecycleowner
         binding.lifecycleOwner = this
 
@@ -111,7 +150,7 @@ class CourseDetailFragment : Fragment() {
     private fun saveCourse(courseDetailViewModel: CourseDetailViewModel) {
         courseDetailViewModel.onSaveCourse(
             course_title.text.toString(),
-            course_status_spinner.toString(),
+            course_status_spinner.selectedItem.toString(),
             start_date.text.toString(),
             end_date.text.toString(),
             mentor_name.text.toString(),
@@ -119,7 +158,7 @@ class CourseDetailFragment : Fragment() {
             mentor_email.text.toString(),
             notes.text.toString()
         )
-        Toast.makeText(context, "Course saved!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "course saved", Toast.LENGTH_SHORT).show()
         courseDetailViewModel.onNavigateToTermDetail()
         courseDetailViewModel.onTermDetailNavigated()
     }
