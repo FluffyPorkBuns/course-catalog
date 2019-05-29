@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.example.coursecatalog.util.getDateNextMonth
 import java.util.*
 
 // defines the term entity for the room to use in the database
@@ -20,6 +21,6 @@ data class TermEntity(
     var startDate: Date = Date(),
 
     @ColumnInfo(name = "end_date")
-    var endDate: Date = Date()
+    var endDate: Date = getDateNextMonth()
 
 )

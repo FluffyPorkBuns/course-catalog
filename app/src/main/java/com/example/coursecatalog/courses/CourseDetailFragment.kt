@@ -1,7 +1,6 @@
 package com.example.coursecatalog.courses
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +17,7 @@ import com.example.coursecatalog.database.CatalogDatabase
 import com.example.coursecatalog.databinding.FragmentCourseDetailBinding
 import com.example.coursecatalog.util.NotificationScheduler
 import com.example.coursecatalog.util.getViewModel
+import com.example.coursecatalog.validation.*
 import kotlinx.android.synthetic.main.fragment_course_detail.*
 
 
@@ -80,6 +80,24 @@ class CourseDetailFragment : Fragment() {
             }
         })
 
+        // add validation listener to title edittext field
+        binding.courseTitle.validate({text -> text.isNotBlank()},
+            "Title is required!")
+
+        // add validation listener to dueDate field
+        binding.startDate.validate({date -> date.isValidDate()},
+            "Date is required and the format should be MM/dd/yy")
+
+        // add validation listener to dueDate field
+        binding.endDate.validate({date -> date.isValidDate()},
+            "Date is required and the format should be MM/dd/yy")
+
+        binding.mentorEmail.validate({email -> email.isValidEmail()},
+            "Email must be in a valid 'mentor@example.com' format or left blank")
+
+        binding.mentorPhone.validate({phone -> phone.isValidPhone()},
+            "Phone must be in a valid format or left blank")
+
         binding.addAlarmButton.setOnClickListener{
             // save alarm for course
             NotificationScheduler.newCourseNotification(context!!, arguments.courseKey)
@@ -94,7 +112,7 @@ class CourseDetailFragment : Fragment() {
         }
 
         // handle user clicking the save button
-        binding.courseSaveButton.setOnClickListener{
+        binding.saveButton.setOnClickListener{
             saveCourse(courseDetailViewModel)
         }
 
@@ -148,19 +166,34 @@ class CourseDetailFragment : Fragment() {
 
     // calls on viewmodel to save course from ui to database and navigate to term detail fragment
     private fun saveCourse(courseDetailViewModel: CourseDetailViewModel) {
-        courseDetailViewModel.onSaveCourse(
-            course_title.text.toString(),
-            course_status_spinner.selectedItem.toString(),
-            start_date.text.toString(),
-            end_date.text.toString(),
-            mentor_name.text.toString(),
-            mentor_phone.text.toString(),
-            mentor_email.text.toString(),
-            notes.text.toString()
-        )
-        Toast.makeText(context, "course saved", Toast.LENGTH_SHORT).show()
-        courseDetailViewModel.onNavigateToTermDetail()
-        courseDetailViewModel.onTermDetailNavigated()
+
+        if(course_title.text.isNotBlank() && start_date.text.toString().isValidDate()
+            && end_date.text.toString().isValidDate() && mentor_phone.text.toString().isValidPhone()
+            && mentor_email.text.toString().isValidEmail()) {
+
+            // call on viewmodel to save course to database
+            courseDetailViewModel.onSaveCourse(
+                course_title.text.toString(),
+                course_status_spinner.selectedItem.toString(),
+                start_date.text.toString(),
+                end_date.text.toString(),
+                mentor_name.text.toString(),
+                mentor_phone.text.toString(),
+                mentor_email.text.toString(),
+                notes.text.toString()
+            )
+            // display toast message to user
+            Toast.makeText(context, "course saved", Toast.LENGTH_SHORT).show()
+
+            // navigate to term detail view
+            courseDetailViewModel.onNavigateToTermDetail()
+            courseDetailViewModel.onTermDetailNavigated()
+        } else {
+            // display error message if form doesn't validate
+            Toast.makeText(context, "can't save because of input errors", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
 }

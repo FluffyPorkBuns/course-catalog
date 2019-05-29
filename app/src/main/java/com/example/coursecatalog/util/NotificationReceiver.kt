@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.example.coursecatalog.R
 
 class NotificationReceiver : BroadcastReceiver() {
-    var notificationId = 0
 
     override fun onReceive(context: Context, intent: Intent) {
 
@@ -28,7 +27,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
         // builds the alert
         val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.notification_icon_background)
+            .setSmallIcon(R.drawable.ic_school_black_24dp)
             .setContentTitle(intent.extras!!.getString("title"))
             .setContentText(intent.extras!!.getString("text"))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

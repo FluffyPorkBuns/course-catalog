@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
+import com.example.coursecatalog.util.getDateNextMonth
 import java.util.*
 
 /**
@@ -33,7 +34,7 @@ data class Assessment(
     var type: String = "objective",
 
     @ColumnInfo(name= "due_date")
-    var dueDate: Date = Date(),
+    var dueDate: Date = getDateNextMonth(),
 
     @ColumnInfo(name = "notes")
     var notes: String = "",

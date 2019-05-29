@@ -10,10 +10,12 @@ fun formatDateAsString(date: Date): String {
     return simpleDateFormat.format(date)
 }
 
+// convert a string into a date object
 fun formatStringAsDate(date: String): Date {
     return SimpleDateFormat("MM/dd/yy").parse(date)
 }
 
+// take a date and set the time to midnight that morning
 fun getDateBeginningOfDay(date: Date): Date {
     val calendar = GregorianCalendar()
     calendar.time = date
@@ -25,9 +27,18 @@ fun getDateBeginningOfDay(date: Date): Date {
     return calendar.time
 }
 
+// take a date and return a date one day in the past
 fun getYesterday(date: Date): Date {
     val calendar = GregorianCalendar()
     calendar.time = date
     calendar.add(Calendar.HOUR, -24)
+    return calendar.time
+}
+
+// take a date and return a date 30 days in the future
+fun getDateNextMonth(): Date {
+    val calendar = GregorianCalendar()
+    calendar.time = Date()
+    calendar.add(Calendar.HOUR, 720)
     return calendar.time
 }

@@ -17,6 +17,9 @@ import com.example.coursecatalog.courses.CourseAdapter
 import com.example.coursecatalog.database.CatalogDatabase
 import com.example.coursecatalog.databinding.FragmentTermDetailBinding
 import com.example.coursecatalog.util.getViewModel
+import com.example.coursecatalog.validation.isNotBlank
+import com.example.coursecatalog.validation.isValidDate
+import com.example.coursecatalog.validation.validate
 import kotlinx.android.synthetic.main.fragment_term_detail.*
 
 
@@ -63,6 +66,18 @@ class TermDetailFragment : Fragment() {
                 adapter.submitList(it)
             }
         })
+
+        // add validation listener to title edittext field
+        binding.termTitle.validate({text -> text.isNotBlank()},
+            "Title is required!")
+
+        // add validation listener to dueDate field
+        binding.startDate.validate({date -> date.isValidDate()},
+            "Date is required and the format should be MM/dd/yy")
+
+        // add validation listener to dueDate field
+        binding.endDate.validate({date -> date.isValidDate()},
+            "Date is required and the format should be MM/dd/yy")
 
         // handle user clicking the save button
         binding.termSaveButton.setOnClickListener{
@@ -129,7 +144,7 @@ class TermDetailFragment : Fragment() {
     private fun saveTerm(termDetailViewModel: TermDetailViewModel) {
         termDetailViewModel.onSaveTerm(
             term_title.text.toString(),
-            start_date_text.text.toString(),
+            start_date.text.toString(),
             start_date.text.toString()
         )
         Toast.makeText(context, "term saved", Toast.LENGTH_SHORT).show()

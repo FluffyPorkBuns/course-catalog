@@ -1,6 +1,7 @@
 package com.example.coursecatalog.database
 
 import androidx.room.*
+import com.example.coursecatalog.util.getDateNextMonth
 import java.util.*
 
 // mentor object will be nested under CourseEntity
@@ -37,7 +38,7 @@ data class CourseEntity(
     var startDate: Date = Date(),
 
     @ColumnInfo(name = "end_date")
-    var endDate: Date = Date(),
+    var endDate: Date = getDateNextMonth(),
 
     @ColumnInfo(name = "status")
     var status: String = "plan to take",

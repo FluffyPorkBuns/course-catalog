@@ -14,68 +14,68 @@ import java.util.*
 
 object NotificationScheduler {
 
-    fun scheduleExistingNotifications(context: Context) {
-
-        var alarmCode = 0
-
-        val dataSource = CatalogDatabase.getInstance(context).catalogDatabaseDao
-
-        val courses = dataSource.getAllCoursesAsList()
-
-        val assessments = dataSource.getAllAssessmentsAsList()
-
-        // get the date object for midnight this morning
-        val yesterday = getDateBeginningOfDay(getYesterday(Date()))
-
-        // create course notification alarms for courses starting or ending today or later
-        for(course in courses) {
-
-            // generate a unique alarmId by adding the word "course" and the courseId and getting the hashcode
-            val startAlarmId = "startcourse${course.courseId}".hashCode()
-
-            // generate a unique alarmId by adding the word "course" and the courseId and getting the hashcode
-            val endAlarmId = "endcourse${course.courseId}".hashCode()
-
-            // schedule alert for course if the day before it is today or in the future
-            if (course.startDate.after(yesterday)) {
-
-                addAlarm(context, "course",
-                    course.courseTitle,
-                    "starts ${formatDateAsString(course.startDate)}",
-                    "is starting soon!",
-                    "course start",
-                    startAlarmId,
-                    getYesterday(getDateBeginningOfDay(course.startDate)).time)
-            }
-
-            // schedule alert for courses that end today or out in the future
-            if (course.endDate.after(yesterday)) {
-                addAlarm(context, "course",
-                    course.courseTitle,
-                    "ends ${formatDateAsString(course.endDate)}",
-                    "is ending soon!",
-                    "course end",
-                    endAlarmId,
-                    getYesterday(getDateBeginningOfDay(course.endDate)).time)
-            }
-        }
-
-        // create notifications alarms for all assessments due today or later
-        for(assessment in assessments) {
-            // schedule alert for assessments that start today
-            if(assessment.dueDate.after(yesterday)) {
-                val alertId = "assessment${assessment.assessmentId}".hashCode()
-
-                addAlarm(context, "${assessment.type} assessment",
-                    assessment.title,
-                    "due ${formatDateAsString(assessment.dueDate)}!",
-                    "is due soon!",
-                    "assessment due",
-                    alertId,
-                    getYesterday(getDateBeginningOfDay(assessment.dueDate)).time)
-            }
-        }
-    }
+//    fun scheduleExistingNotifications(context: Context) {
+//
+//        var alarmCode = 0
+//
+//        val dataSource = CatalogDatabase.getInstance(context).catalogDatabaseDao
+//
+//        val courses = dataSource.getAllCoursesAsList()
+//
+//        val assessments = dataSource.getAllAssessmentsAsList()
+//
+//        // get the date object for midnight this morning
+//        val yesterday = getDateBeginningOfDay(getYesterday(Date()))
+//
+//        // create course notification alarms for courses starting or ending today or later
+//        for(course in courses) {
+//
+//            // generate a unique alarmId by adding the word "course" and the courseId and getting the hashcode
+//            val startAlarmId = "startcourse${course.courseId}".hashCode()
+//
+//            // generate a unique alarmId by adding the word "course" and the courseId and getting the hashcode
+//            val endAlarmId = "endcourse${course.courseId}".hashCode()
+//
+//            // schedule alert for course if the day before it is today or in the future
+//            if (course.startDate.after(yesterday)) {
+//
+//                addAlarm(context, "course",
+//                    course.courseTitle,
+//                    "starts ${formatDateAsString(course.startDate)}",
+//                    "is starting soon!",
+//                    "course start",
+//                    startAlarmId,
+//                    getYesterday(getDateBeginningOfDay(course.startDate)).time)
+//            }
+//
+//            // schedule alert for courses that end today or out in the future
+//            if (course.endDate.after(yesterday)) {
+//                addAlarm(context, "course",
+//                    course.courseTitle,
+//                    "ends ${formatDateAsString(course.endDate)}",
+//                    "is ending soon!",
+//                    "course end",
+//                    endAlarmId,
+//                    getYesterday(getDateBeginningOfDay(course.endDate)).time)
+//            }
+//        }
+//
+//        // create notifications alarms for all assessments due today or later
+//        for(assessment in assessments) {
+//            // schedule alert for assessments that start today
+//            if(assessment.dueDate.after(yesterday)) {
+//                val alertId = "assessment${assessment.assessmentId}".hashCode()
+//
+//                addAlarm(context, "${assessment.type} assessment",
+//                    assessment.title,
+//                    "due ${formatDateAsString(assessment.dueDate)}!",
+//                    "is due soon!",
+//                    "assessment due",
+//                    alertId,
+//                    getYesterday(getDateBeginningOfDay(assessment.dueDate)).time)
+//            }
+//        }
+//    }
 
     // add alarm to phone
     private fun addAlarm(

@@ -1,6 +1,11 @@
 package com.example.coursecatalog.assessments
 
+import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +22,67 @@ import com.example.coursecatalog.databinding.FragmentAssessmentDetailBinding
 import com.example.coursecatalog.util.NotificationScheduler
 import com.example.coursecatalog.util.getViewModel
 import kotlinx.android.synthetic.main.fragment_assessment_detail.*
+import com.example.coursecatalog.util.MessageComposer
+import com.example.coursecatalog.util.formatDateAsString
+import com.example.coursecatalog.validation.isNotBlank
+import com.example.coursecatalog.validation.isValidDate
+import com.example.coursecatalog.validation.validate
 
 
 class AssessmentDetailFragment : Fragment() {
+
+    val PICK_CONTACT_REQUEST = 1  // The request code
+
+    var requestType = "" // tells onactivityresult to process contact as email or sms
+
+    var requestSubject = ""
+
+    var requestBody = ""
+
+    // starts an activity for the user to pick a contact to send an SMS or email
+    fun selectContact() {
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            if(requestType == "email") {
+                type = ContactsContract.CommonDataKinds.Email.CONTENT_TYPE
+            } else {
+                type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
+            }
+        }
+        if (intent.resolveActivity(context!!.packageManager) != null) {
+            startActivityForResult(intent, PICK_CONTACT_REQUEST)
+        }
+    }
+
+    @SuppressLint("Recycle")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == PICK_CONTACT_REQUEST && resultCode == RESULT_OK) {
+            // Get the URI and query the content provider for the phone number
+            val contactUri: Uri = data!!.data
+            val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Email.ADDRESS)
+
+            var contactInfo: String
+
+            data!!.data?.also {
+                context!!.contentResolver.query(contactUri, projection, null, null, null)?.apply {
+                    moveToFirst()
+
+                    // if request is email, get the email address from the contact
+                    // otherwise get the phone number
+                    if (requestType == "email") {
+                        val column: Int = getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
+                        contactInfo = getString(column)
+                        MessageComposer.composeEmail(context!!, contactInfo, requestSubject, requestBody)
+                    } else {
+                        val column: Int = getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        contactInfo = getString(column)
+                        MessageComposer.composeSMS(context!!, contactInfo, requestBody)
+                    }
+                }
+            }
+
+
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +117,6 @@ class AssessmentDetailFragment : Fragment() {
 //            assessmentDetailViewModel.onTermDetailNavigated()
 //        }
 
-
         /**
          * makes sure that when the user hits the back button
          * it saves the assessment and navigates them back to the term detail view
@@ -78,6 +140,19 @@ class AssessmentDetailFragment : Fragment() {
             }
         })
 
+        // add validation listener to title edittext field
+        binding.assessmentTitle.validate({text -> text.isNotBlank()},
+            "Title is required!")
+
+        // add validation listener to dueDate field
+        binding.dueDate.validate({date -> date.isValidDate()},
+            "Date is required and the format should be MM/dd/yy")
+
+        binding.saveButton.setOnClickListener{
+            saveAssessment(assessmentDetailViewModel)
+        }
+
+
         binding.deleteButton.setOnClickListener{
             assessmentDetailViewModel.onDelete()
             Toast.makeText(context, "assessment deleted", Toast.LENGTH_SHORT).show()
@@ -88,6 +163,33 @@ class AssessmentDetailFragment : Fragment() {
         // add notification
         binding.alarmSetButton.setOnClickListener{
             NotificationScheduler.newAssessmentNotification(context!!, arguments.assessmentKey)
+        }
+
+        // clicklistener for email button
+        binding.emailButton.setOnClickListener{
+            requestType = "email"
+            requestSubject = "assessment ${binding.assessmentTitle.text} due ${binding.dueDate.text}"
+            requestBody = "My ${binding.assessmentTypeSpinner.selectedItem} assessment '${binding.assessmentTitle.text}'" +
+                    " is due on ${binding.dueDate.text}." +
+            if (binding.notes.text.isNotEmpty()) {
+                " Here are some notes about it: '${binding.notes.text}'"
+            } else {
+                " I have no notes with this assessment."
+            }
+            selectContact()
+        }
+
+        // clicklistener for the sms button
+        binding.smsButton.setOnClickListener{
+            requestType = "sms"
+            requestBody = "My ${binding.assessmentTypeSpinner.selectedItem} assessment '${binding.assessmentTitle.text}'" +
+                    " is due on ${binding.dueDate.text}." +
+                    if (binding.notes.text.isNotEmpty()) {
+                        " Here are some notes about it: '${binding.notes.text}'"
+                    } else {
+                        " I have no notes with this assessment."
+                    }
+            selectContact()
         }
 
         // ArrayAdapter for assessment type spinner
@@ -113,15 +215,22 @@ class AssessmentDetailFragment : Fragment() {
 
     // calls on viewmodel to save assessment from ui to database and navigate to term detail fragment
     private fun saveAssessment(assessmentDetailViewModel: AssessmentDetailViewModel) {
-        assessmentDetailViewModel.onSaveAssessment(
-            assessment_title.text.toString(),
-            assessment_type_spinner.selectedItem.toString(),
-            due_date.text.toString(),
-            notes.text.toString()
-        )
-        Toast.makeText(context, "assessment saved", Toast.LENGTH_SHORT).show()
-        assessmentDetailViewModel.onNavigateToCourseDetail()
-        assessmentDetailViewModel.onCourseDetailNavigated()
+
+        if(assessment_title.text.isNotEmpty() && due_date.text.toString().isValidDate()) {
+            assessmentDetailViewModel.onSaveAssessment(
+                assessment_title.text.toString(),
+                assessment_type_spinner.selectedItem.toString(),
+                due_date.text.toString(),
+                notes.text.toString()
+            )
+            Toast.makeText(context, "assessment saved", Toast.LENGTH_SHORT).show()
+            assessmentDetailViewModel.onNavigateToCourseDetail()
+            assessmentDetailViewModel.onCourseDetailNavigated()
+        } else {
+            Toast.makeText(context, "can't save assessment because of input errors", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
 }
