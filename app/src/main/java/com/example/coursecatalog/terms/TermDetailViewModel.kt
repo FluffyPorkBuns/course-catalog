@@ -46,21 +46,6 @@ class TermDetailViewModel(
     val navigateToTermList: LiveData<Boolean?>
         get() = _navigateToTermList
 
-    // allows fragment to observe when to navigate to course picker fragment
-    private val _navigateToCoursePicker = MutableLiveData<Long?>()
-    val navigateToCoursePicker: LiveData<Long?>
-        get() = _navigateToCoursePicker
-
-    // signal to fragment to navigate to course picker fragment
-    fun onNavigateToCoursePicker() {
-        _navigateToCoursePicker.value = termKey
-    }
-
-    // reset status of navigation flag
-    fun onCoursePickerNavigated() {
-        _navigateToCoursePicker.value = null
-    }
-
     // tells app to cancel all coroutines when closing this fragment
     override fun onCleared() {
         super.onCleared()
@@ -89,17 +74,6 @@ class TermDetailViewModel(
         }
     }
 
-    // adds new blank course and navigates to course detail
-    fun onAddCourse() {
-        uiScope.launch {
-            val newCourse = CourseEntity()
-            newCourse.termId = termKey
-            val courseId = database.insert(newCourse)
-            onCourseClicked(courseId)
-            onCourseNavigated()
-        }
-    }
-
     fun onDelete() {
         uiScope.launch {
            if (courses.value.isNullOrEmpty()) {
@@ -112,13 +86,22 @@ class TermDetailViewModel(
         }
     }
 
-    private val _navigateToCourseDetail = MutableLiveData<Long>()
-    val navigateToCourseDetail
-        get() = _navigateToCourseDetail
+    private val _navigateToCourseList = MutableLiveData<Long?>()
+    val navigateToCourseList
+        get() = _navigateToCourseList
+
+    fun onNavigateToCourseList() {
+        _navigateToCourseList.value = termKey
+    }
+
+    fun onCourseNavigated() {
+        _navigateToCourseList.value = null
+    }
 
     private val _cannotDelete = MutableLiveData<Boolean>()
     val cannotDelete
         get() = _cannotDelete
+
     fun onCannotDelete() {
         _cannotDelete.value = true
     }
@@ -127,13 +110,6 @@ class TermDetailViewModel(
         _cannotDelete.value = null
     }
 
-    fun onCourseClicked(courseId: Long) {
-        _navigateToCourseDetail.value = courseId
-    }
 
-
-    fun onCourseNavigated() {
-        _navigateToCourseDetail.value = null
-    }
 
 }

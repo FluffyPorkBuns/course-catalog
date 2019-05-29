@@ -132,10 +132,10 @@ class AssessmentDetailFragment : Fragment() {
         assessmentDetailViewModel.getCourseId()
 
         // listener that navigates to term detail view when viewmodel requests it
-        assessmentDetailViewModel.navigateToCourseDetail.observe(viewLifecycleOwner, Observer{
+        assessmentDetailViewModel.navigateToAssessmentList.observe(viewLifecycleOwner, Observer{
             it?.let{
                 this.findNavController().navigate(
-                    AssessmentDetailFragmentDirections.actionAssessmentDetailFragmentToCourseDetailFragment(it)
+                    AssessmentDetailFragmentDirections.actionAssessmentDetailFragmentToAssessmentListFragment(it)
                 )
             }
         })
@@ -156,8 +156,8 @@ class AssessmentDetailFragment : Fragment() {
         binding.deleteButton.setOnClickListener{
             assessmentDetailViewModel.onDelete()
             Toast.makeText(context, "assessment deleted", Toast.LENGTH_SHORT).show()
-            assessmentDetailViewModel.onNavigateToCourseDetail()
-            assessmentDetailViewModel.onCourseDetailNavigated()
+            assessmentDetailViewModel.onNavigateToAssessmentList()
+            assessmentDetailViewModel.onAssessmentListNavigated()
         }
 
         // add notification
@@ -224,8 +224,8 @@ class AssessmentDetailFragment : Fragment() {
                 notes.text.toString()
             )
             Toast.makeText(context, "assessment saved", Toast.LENGTH_SHORT).show()
-            assessmentDetailViewModel.onNavigateToCourseDetail()
-            assessmentDetailViewModel.onCourseDetailNavigated()
+            assessmentDetailViewModel.onNavigateToAssessmentList()
+            assessmentDetailViewModel.onAssessmentListNavigated()
         } else {
             Toast.makeText(context, "can't save assessment because of input errors", Toast.LENGTH_SHORT).show()
         }

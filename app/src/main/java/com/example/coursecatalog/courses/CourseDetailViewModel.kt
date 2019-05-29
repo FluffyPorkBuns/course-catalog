@@ -27,9 +27,6 @@ class CourseDetailViewModel(
     // live data representing course object we're looking at
     private val course = MediatorLiveData<CourseEntity>()
 
-    // get courses associated with this term
-    val assessments = database.getAssessmentsByCourse(courseKey)
-
     fun getCourse() = course
 
     // add database source to course object we're looking at
@@ -38,24 +35,24 @@ class CourseDetailViewModel(
     }
 
     // allows fragment to observe whether to navigate to the course list
-    private val _navigateToTermDetail = MutableLiveData<Long?>()
-    val navigateToTermDetail: LiveData<Long?>
-        get() = _navigateToTermDetail
+    private val _navigateToCourseList = MutableLiveData<Long?>()
+    val navigateToCourseList: LiveData<Long?>
+        get() = _navigateToCourseList
+
+    // tells observer it's time to navigate to the course list
+    fun onNavigateToCourseList() {
+        _navigateToCourseList.value = termKey
+    }
+
+    // resets back to null so observer knows not to navigate anymore
+    fun onCourseListNavigated() {
+        _navigateToCourseList.value = null
+    }
 
     // tells app to cancel all coroutines when closing this fragment
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
-    }
-
-    // tells observer it's time to navigate to the course list
-    fun onNavigateToTermDetail() {
-        _navigateToTermDetail.value = termKey
-    }
-
-    // resets back to null so observer knows not to navigate anymore
-    fun onTermDetailNavigated() {
-        _navigateToTermDetail.value = null
     }
 
     fun onSaveCourse(title: String,
@@ -87,41 +84,30 @@ class CourseDetailViewModel(
         }
     }
 
-    // adds a new assessment and navigates to assessment detail view
-    fun onNewAssessment() {
-        uiScope.launch {
-            val assessment = Assessment()
-            assessment.courseId = courseKey
-            val newId = database.insert(assessment)
-            onAssessmentClicked(newId)
-            onAssessmentNavigated()
-        }
-    }
-
     fun getTermId(){
         uiScope.launch {
             termKey = database.getTermIdForCourse(courseKey)
         }
     }
 
-    private val _navigateToAssessmentDetail = MutableLiveData<Long>()
-    val navigateToAssessmentDetail
-        get() = _navigateToAssessmentDetail
+    private val _navigateToAssessmentList = MutableLiveData<Long>()
+    val navigateToAssessmentList
+        get() = _navigateToAssessmentList
 
-    fun onAssessmentClicked(assessmentId: Long) {
-        _navigateToAssessmentDetail.value = assessmentId
+    fun onNavigateToAssessmentList() {
+        _navigateToAssessmentList.value = courseKey
     }
 
 
-    fun onAssessmentNavigated() {
-        _navigateToAssessmentDetail.value = null
+    fun onAssessmentListNavigated() {
+        _navigateToAssessmentList.value = null
     }
 
     fun onDelete() {
         uiScope.launch {
             database.deleteCourseById(courseKey)
-            onNavigateToTermDetail()
-            onTermDetailNavigated()
+            onNavigateToCourseList()
+            onCourseListNavigated()
         }
     }
 

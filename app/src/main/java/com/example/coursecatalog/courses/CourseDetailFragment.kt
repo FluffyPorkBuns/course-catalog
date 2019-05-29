@@ -46,22 +46,6 @@ class CourseDetailFragment : Fragment() {
             getViewModel { CourseDetailViewModel(arguments.courseKey, dataSource) }
         }
 
-        // instantiate adapter for assessment list
-        val adapter = AssessmentAdapter(AssessmentAdapter.AssessmentListener{ assessmentId ->
-            courseDetailViewModel.onAssessmentClicked(assessmentId)
-        })
-
-//        // handle user clicking the save button
-//        binding.courseSaveButton.setOnClickListener{
-//            courseDetailViewModel.onSaveCourse(
-//                course_title.text.toString()
-//            )
-//            Toast.makeText(context, "Course saved!", Toast.LENGTH_SHORT).show()
-//            courseDetailViewModel.onNavigateToTermDetail()
-//            courseDetailViewModel.onTermDetailNavigated()
-//        }
-
-
         /**
          * makes sure that when the user hits the back button
          * it saves the course and navigates them back to the term detail view
@@ -72,13 +56,6 @@ class CourseDetailFragment : Fragment() {
             saveCourse(courseDetailViewModel)
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-
-        // observe term table for changes so recyclerview updates
-        courseDetailViewModel.assessments.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                adapter.submitList(it)
-            }
-        })
 
         // add validation listener to title edittext field
         binding.courseTitle.validate({text -> text.isNotBlank()},
@@ -106,11 +83,6 @@ class CourseDetailFragment : Fragment() {
         // tell course detail viewmodel to get the termId associated with this course
         courseDetailViewModel.getTermId()
 
-        // click handler for assessment add button
-        binding.addAssessmentButton.setOnClickListener{
-            courseDetailViewModel.onNewAssessment()
-        }
-
         // handle user clicking the save button
         binding.saveButton.setOnClickListener{
             saveCourse(courseDetailViewModel)
@@ -121,21 +93,49 @@ class CourseDetailFragment : Fragment() {
             courseDetailViewModel.onDelete()
         }
 
+        binding.assessmentButton.setOnClickListener{
+            if(course_title.text.isNotBlank() && start_date.text.toString().isValidDate()
+                && end_date.text.toString().isValidDate() && mentor_phone.text.toString().isValidPhone()
+                && mentor_email.text.toString().isValidEmail()) {
+
+                // call on viewmodel to save course to database
+                courseDetailViewModel.onSaveCourse(
+                    course_title.text.toString(),
+                    course_status_spinner.selectedItem.toString(),
+                    start_date.text.toString(),
+                    end_date.text.toString(),
+                    mentor_name.text.toString(),
+                    mentor_phone.text.toString(),
+                    mentor_email.text.toString(),
+                    notes.text.toString()
+                )
+                // display toast message to user
+                Toast.makeText(context, "course saved", Toast.LENGTH_SHORT).show()
+
+                // navigate to term detail view
+                courseDetailViewModel.onNavigateToAssessmentList()
+                courseDetailViewModel.onAssessmentListNavigated()
+            } else {
+                // display error message if form doesn't validate
+                Toast.makeText(context, "can't continue because of input errors", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // listener that navigates to term detail view when viewmodel requests it
-        courseDetailViewModel.navigateToTermDetail.observe(viewLifecycleOwner, Observer{
+        courseDetailViewModel.navigateToCourseList.observe(viewLifecycleOwner, Observer{
             it?.let{
                 this.findNavController().navigate(
-                    CourseDetailFragmentDirections.actionCourseDetailFragmentToTermDetailFragment(it)
+                    CourseDetailFragmentDirections.actionCourseDetailFragmentToCourseListFragment(it)
                 )
             }
         })
 
         // listener that navigates to assessment detail view when viewmodel requests it
-        courseDetailViewModel.navigateToAssessmentDetail.observe(viewLifecycleOwner, Observer{
+        courseDetailViewModel.navigateToAssessmentList.observe(viewLifecycleOwner, Observer{
             it?.let{
 
                 this.findNavController().navigate(
-                    CourseDetailFragmentDirections.actionCourseDetailFragmentToAssessmentDetailFragment(it)
+                    CourseDetailFragmentDirections.actionCourseDetailFragmentToAssessmentListFragment(it)
                 )
             }
         })
@@ -152,9 +152,6 @@ class CourseDetailFragment : Fragment() {
 
         // bind viewmodel to fragment
         binding.courseDetailViewModel = courseDetailViewModel
-
-        // bind adapter to assessment recyclerview
-        binding.assessmentList.adapter = adapter
 
         // bind lifecycleowner
         binding.lifecycleOwner = this
@@ -186,8 +183,8 @@ class CourseDetailFragment : Fragment() {
             Toast.makeText(context, "course saved", Toast.LENGTH_SHORT).show()
 
             // navigate to term detail view
-            courseDetailViewModel.onNavigateToTermDetail()
-            courseDetailViewModel.onTermDetailNavigated()
+            courseDetailViewModel.onNavigateToCourseList()
+            courseDetailViewModel.onCourseListNavigated()
         } else {
             // display error message if form doesn't validate
             Toast.makeText(context, "can't save because of input errors", Toast.LENGTH_SHORT).show()

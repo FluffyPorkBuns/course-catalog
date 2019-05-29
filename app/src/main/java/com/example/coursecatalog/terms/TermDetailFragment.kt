@@ -2,7 +2,6 @@ package com.example.coursecatalog.terms
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.coursecatalog.R
-import com.example.coursecatalog.courses.CourseAdapter
 import com.example.coursecatalog.database.CatalogDatabase
 import com.example.coursecatalog.databinding.FragmentTermDetailBinding
 import com.example.coursecatalog.util.getViewModel
@@ -43,29 +41,10 @@ class TermDetailFragment : Fragment() {
         // getTerm reference to database dao
         val dataSource = CatalogDatabase.getInstance(application).catalogDatabaseDao
 
-        val courses = dataSource.getAllCoursesAsList()
-
-        for(course in courses) {
-            Log.i("databaseissues",course.toString())
-        }
-
-
         // gets the viewmodel object for this fragment and pass termkey and datasource
         val termDetailViewModel by lazy {
             getViewModel { TermDetailViewModel(arguments.termKey, dataSource)}
         }
-
-        // instantiate adapter for course list
-        val adapter = CourseAdapter(CourseAdapter.CourseListener { courseId ->
-            termDetailViewModel.onCourseClicked(courseId)
-        })
-
-        // observe term table for changes so recyclerview updates
-        termDetailViewModel.courses.observe(viewLifecycleOwner, Observer{
-            it?.let{
-                adapter.submitList(it)
-            }
-        })
 
         // add validation listener to title edittext field
         binding.termTitle.validate({text -> text.isNotBlank()},
@@ -80,13 +59,31 @@ class TermDetailFragment : Fragment() {
             "Date is required and the format should be MM/dd/yy")
 
         // handle user clicking the save button
-        binding.termSaveButton.setOnClickListener{
+        binding.saveButton.setOnClickListener{
             saveTerm(termDetailViewModel)
         }
 
         // handle delete button
         binding.deleteButton.setOnClickListener{
             termDetailViewModel.onDelete()
+        }
+
+        binding.courseListButton.setOnClickListener{
+
+            if(term_title.text.toString().isNotBlank() && start_date.text.toString().isValidDate()
+                && end_date.text.toString().isValidDate()) {
+
+                termDetailViewModel.onSaveTerm(
+                    term_title.text.toString(),
+                    start_date.text.toString(),
+                    end_date.text.toString()
+                )
+                Toast.makeText(context, "term saved", Toast.LENGTH_SHORT).show()
+                termDetailViewModel.onNavigateToCourseList()
+                termDetailViewModel.onCourseNavigated()
+            } else {
+                Toast.makeText(context, "can't continue, some fields are invalid", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // pops up an error message if the user tries to delete a term with courses
@@ -106,11 +103,10 @@ class TermDetailFragment : Fragment() {
             }
         })
 
-        termDetailViewModel.navigateToCourseDetail.observe(viewLifecycleOwner, Observer{
+        termDetailViewModel.navigateToCourseList.observe(viewLifecycleOwner, Observer{
             it?.let {
-
                 this.findNavController().navigate(
-                    TermDetailFragmentDirections.actionTermDetailFragmentToCourseDetailFragment(it)
+                    TermDetailFragmentDirections.actionTermDetailFragmentToCourseListFragment(it)
                 )
                 termDetailViewModel.onCourseNavigated()
             }
@@ -130,9 +126,6 @@ class TermDetailFragment : Fragment() {
         // bind viewmodel to fragment
         binding.termDetailViewModel = termDetailViewModel
 
-        // bind course list adapter to recyclerview
-        binding.termCourseList.adapter = adapter
-
         // bind lifecycleowner
         binding.lifecycleOwner = this
 
@@ -142,14 +135,23 @@ class TermDetailFragment : Fragment() {
     }
 
     private fun saveTerm(termDetailViewModel: TermDetailViewModel) {
-        termDetailViewModel.onSaveTerm(
-            term_title.text.toString(),
-            start_date.text.toString(),
-            start_date.text.toString()
-        )
-        Toast.makeText(context, "term saved", Toast.LENGTH_SHORT).show()
-        termDetailViewModel.onNavigateToTermList()
-        termDetailViewModel.onTermListNavigated()
+
+        if(term_title.text.toString().isNotBlank() && start_date.text.toString().isValidDate()
+            && end_date.text.toString().isValidDate()) {
+
+            termDetailViewModel.onSaveTerm(
+                term_title.text.toString(),
+                start_date.text.toString(),
+                end_date.text.toString()
+            )
+            Toast.makeText(context, "term saved", Toast.LENGTH_SHORT).show()
+            termDetailViewModel.onNavigateToTermList()
+            termDetailViewModel.onTermListNavigated()
+        } else {
+            Toast.makeText(context, "can't continue, some fields are invalid", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
 }

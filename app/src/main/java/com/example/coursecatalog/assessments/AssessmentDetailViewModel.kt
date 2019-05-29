@@ -36,9 +36,9 @@ class AssessmentDetailViewModel(
     }
 
     // allows fragment to observe whether to navigate to the assessment list
-    private val _navigateToCourseDetail = MutableLiveData<Long?>()
-    val navigateToCourseDetail: LiveData<Long?>
-        get() = _navigateToCourseDetail
+    private val _navigateToAssessmentList = MutableLiveData<Long?>()
+    val navigateToAssessmentList: LiveData<Long?>
+        get() = _navigateToAssessmentList
 
     // tells app to cancel all coroutines when closing this fragment
     override fun onCleared() {
@@ -47,13 +47,13 @@ class AssessmentDetailViewModel(
     }
 
     // tells observer it's time to navigate to the assessment list
-    fun onNavigateToCourseDetail() {
-        _navigateToCourseDetail.value = courseKey
+    fun onNavigateToAssessmentList() {
+        _navigateToAssessmentList.value = courseKey
     }
 
     // resets back to null so observer knows not to navigate anymore
-    fun onCourseDetailNavigated() {
-        _navigateToCourseDetail.value = null
+    fun onAssessmentListNavigated() {
+        _navigateToAssessmentList.value = null
     }
 
     fun onSaveAssessment(title: String,
