@@ -24,4 +24,7 @@ Students can use this app to track the beginning and end dates for the courses t
 * User is notified when important date / time is coming up
 * Notifications are grouped if there is more than one
 5. Pop-up messages
-6. ViewModels
+6. ContactsContract
+* Used to access user's contact list and send SMS / email messages from app
+7. ViewModels
+8. Intents
